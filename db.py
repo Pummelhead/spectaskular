@@ -32,7 +32,7 @@ conn.commit()
 
 def create_table():
     create_table_name = input("Table name: ")
-    cur.execute(f'''CREATE TABLE IF NOT EXISTS {create_table_name} (
+    cur.execute(f'''CREATE TABLE IF NOT EXISTS '{create_table_name}' (
             task TEXT,
             description TEXT,
             priority INTEGER,
@@ -49,7 +49,7 @@ def create_table():
 
 def delete_table():
     delete_table_name = input("Table to delete: ")
-    cur.execute(f"DROP TABLE IF EXISTS {delete_table_name}")
+    cur.execute(f"DROP TABLE IF EXISTS '{delete_table_name}'")
     cur.execute(f"DELETE FROM all_created_tables WHERE name='{delete_table_name}'")
     conn.commit()
 
