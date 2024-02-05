@@ -27,6 +27,7 @@ cur.execute('''CREATE TABLE IF NOT EXISTS all_completed_tasks
             frequency_step_type NULL,
             complete INTEGERT
             )''')
+cur.execute('''CREATE TABLE IF NOT EXISTS all_tasks (task TEXT)''')
 cur.execute('''CREATE TABLE IF NOT EXISTS all_created_tables (name TEXT)''')
 conn.commit()
 
@@ -68,18 +69,33 @@ def add_task():
         if choice in tables:
             cur.execute(f"INSERT INTO {choice} (task, description) VALUES (?, ?)", (task, description))
     cur.execute(f"INSERT INTO all_pending_tasks (task, description) VALUES (?, ?)", (task, description))
+    cur.execute(f"INSERT INTO all_tasks (task) VALUES ('{task}')")
     conn.commit()
 
+def delete_task():
+    tasks = cur.execute("SELECT task FROM all_tasks").fetchall()
+    task_list = [row[0] for row in tasks]
+    delete_task_task = input(f"Task to delet {task_list}: ")
+    all_tables = cur.execute("SELECT name FROM sqlite_master WHERE type='table'").fetchall()
+    for table in all_tables:    
+        table_name = table[0]
+        try:
+            cur.execute(f"DELETE FROM {table_name} WHERE task='{delete_task_task}'")
+        except sqlite3.Error as e:
+            pass
+    conn.commit
+
 if __name__ == "__main__":
-    create_table()
-    create_table()
-    create_table()
+    #create_table()
+    #create_table()
+    #create_table()
     add_task()
     add_task()
     add_task()
-    delete_table()
-    for row in cur.execute("SELECT name FROM all_created_tables ORDER BY name"):
-        print(row)
+    delete_task()
+    #delete_table()
+    for row in cur.execute("SELECT task FROM all_tasks ORDER BY task"):
+        print(row[0])
 
 cur.close()
 conn.close()
