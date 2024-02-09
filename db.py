@@ -32,6 +32,3 @@ cur.execute('''CREATE TABLE IF NOT EXISTS all_completed_tasks
 cur.execute('''CREATE TABLE IF NOT EXISTS all_tasks (task TEXT)''')
 cur.execute('''CREATE TABLE IF NOT EXISTS all_created_tables (name TEXT)''')
 conn.commit()
-
-cur.close()
-conn.close()

@@ -24,3 +24,12 @@ def delete_table():
     cur.execute(f"DROP TABLE IF EXISTS '{delete_table_name}'")
     cur.execute(f"DELETE FROM all_created_tables WHERE name='{delete_table_name}'")
     conn.commit()
+
+def edit_table():
+    tables = cur.execute("SELECT name FROM all_created_tables").fetchall()
+    table_list = [row[0] for row in tables]
+    edit_table_name = input(f"Table to edit {table_list}: ")
+    new_table_name = input("New table name: ")
+    cur.execute(f"ALTER TABLE '{edit_table_name}' RENAME TO '{new_table_name}'")
+    cur.execute(f"UPDATE all_created_tables SET name = '{new_table_name}' WHERE name = '{edit_table_name}'")
+    conn.commit()
