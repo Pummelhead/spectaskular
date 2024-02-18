@@ -1,5 +1,6 @@
 from db import conn
 from db import cur
+import tkinter as tk
 
 def create_table():
     create_table_name = input("Table name: ")
@@ -32,4 +33,10 @@ def edit_table():
     new_table_name = input("New table name: ")
     cur.execute(f"ALTER TABLE '{edit_table_name}' RENAME TO '{new_table_name}'")
     cur.execute(f"UPDATE all_created_tables SET name = '{new_table_name}' WHERE name = '{edit_table_name}'")
+    conn.commit()
+
+def display_all_pending_tasks(tree):
+    rows = cur.execute("SELECT * FROM all_pending_tasks").fetchall()
+    for row in rows:
+        tree.insert("", tk.END, values=(row[0], row[1], row[2]))
     conn.commit()

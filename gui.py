@@ -1,6 +1,7 @@
 import tkinter as tk
+from tkinter import ttk
 
-def creat_widgets(root, add_task):
+def create_task_widgets(root, add_task):
     tk.Label(root, text="Task: ").grid(row=0, column=0)
     task_entry = tk.Entry(root)
     task_entry.grid(row=0, column=1)
@@ -17,3 +18,11 @@ def creat_widgets(root, add_task):
 
     add_button = tk.Button(root, text="Add Task", command=lambda: add_task(task_entry, desc_entry, priority_var))
     add_button.grid(row=3, column=0, columnspan=2)
+
+def display_table_widgets(root, display_data_func):
+    tree = ttk.Treeview(root, columns=("Task", "Description", "Priority"))
+    tree.heading("Task", text="Task")
+    tree.heading("Description", text="Description")
+    tree.heading("Priority", text="Priority")
+    tree.grid(row=0, rowspan=1000, column=2, columnspan=2)
+    display_data_func(tree)

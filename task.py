@@ -5,7 +5,6 @@ import table
 import tkinter as tk
 from db import conn
 from db import cur
-from gui import creat_widgets
 
 def add_task(task_entry, desc_entry, priority_var):
     task = task_entry.get()
