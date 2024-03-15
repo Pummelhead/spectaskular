@@ -5,10 +5,15 @@ from table import display_all_pending_tasks
 from task import add_task, delete_task
 from db import cur
 
-def create_window():
+window_geometry=None
+
+def create_window(geometry=None):
     global root
     root = tk.Tk()
-    root.geometry("1920x1080")
+    if geometry:
+        root.geometry(geometry)
+    else:
+        root.geometry("1920x1080")
     root.title("Spectaskular")
 
     create_task_widgets(root, add_task, delete_task)
@@ -16,9 +21,15 @@ def create_window():
 
     root.mainloop()
 
+def save_geometry():
+    global window_geometry
+    window_geometry = f"{root.winfo_width()}x{root.winfo_height()}+{root.winfo_x()}+{root.winfo_y()}"
+
 def reload_window():
+    global window_geometry
+    save_geometry()
     root.destroy()
-    create_window()
+    create_window(window_geometry)
 
 def create_task_widgets(root, add_task, delete_task):
     tk.Label(root, text="Task: ").grid(row=0, column=0)
