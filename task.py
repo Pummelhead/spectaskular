@@ -11,20 +11,20 @@ def add_task(task_entry, desc_entry, priority_var):
     description = desc_entry.get()
     priority = priority_var.get()
     cur.execute(f"INSERT INTO all_pending_tasks (task, description, priority) VALUES (?, ?, ?)", (task, description, priority))
-    cur.execute(f"INSERT INTO all_tasks (task) VALUES ('{task}')")
+    print("task added")
     task_entry.delete(0, tk.END)
     desc_entry.delete(0, tk.END)
     conn.commit()
 
 def delete_task(task_to_delete):
-    task = task_to_delete.get()
-    all_tables = cur.execute("SELECT name FROM sqlite_master WHERE type='table'").fetchall()
-    for table in all_tables:    
-        table_name = table[0]
-        try:
-            cur.execute(f"DELETE FROM {table_name} WHERE task='{task}'")
-        except sqlite3.Error as e:
-            pass
+    task = task_to_delete.get().strip("'(),'")
+    print(type(task))
+    try:
+        cur.execute(f"DELETE FROM all_pending_tasks WHERE task='{task}'")
+    except sqlite3.Error as e:
+        print(e)
+    print(task)
+    print("Delete button pressed")
     conn.commit()
 
 def complete_task():

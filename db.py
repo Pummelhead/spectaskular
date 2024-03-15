@@ -29,8 +29,8 @@ cur.execute('''CREATE TABLE IF NOT EXISTS all_completed_tasks
             frequency_step NULL,
             frequency_step_type NULL
             )''')
-cur.execute('''CREATE TABLE IF NOT EXISTS all_tasks (task TEXT)''')
+apt_count = cur.execute("SELECT COUNT(*) FROM all_pending_tasks").fetchone()[0]
 cur.execute('''CREATE TABLE IF NOT EXISTS all_created_tables (name TEXT)''')
-cur.execute(f"INSERT OR IGNORE INTO all_pending_tasks (task, description, priority) VALUES (?, ?, ?)", ("Task", "description", "priority"))
-cur.execute(f"INSERT OR IGNORE INTO all_tasks (task) VALUES ('task')")
+if apt_count == 0:
+    cur.execute(f"INSERT OR IGNORE INTO all_pending_tasks (task, description, priority) VALUES (?, ?, ?)", ("Task Example", "Description Example", "High"))
 conn.commit()
