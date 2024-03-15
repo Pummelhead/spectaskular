@@ -46,7 +46,7 @@ def create_task_widgets(root, add_task, delete_task):
     priority_dropdown = tk.OptionMenu(root, priority_var, "High", "Medium", "Low")
     priority_dropdown.grid(row=2, column=1)
 
-    add_button = tk.Button(root, text="Add Task", command=lambda: [add_task(task_entry, desc_entry, priority_var), reload_window()])
+    add_button = tk.Button(root, text="Add Task", command=lambda: [add_task(task_entry, desc_entry, priority_var), display_table_widgets(root, display_all_pending_tasks)])
     add_button.grid(row=3, column=0, columnspan=2)
 
     all_tasks = [row[0] for row in cur.execute("SELECT task FROM all_pending_tasks").fetchall()]
@@ -55,8 +55,11 @@ def create_task_widgets(root, add_task, delete_task):
     delete_dropdown = tk.OptionMenu(root, task_to_delete, *all_tasks)
     delete_dropdown.grid(row=4, column=0)
     
-    delete_button = tk.Button(root, text="Delete Task", command=lambda: [delete_task(task_to_delete), reload_window()])
+    delete_button = tk.Button(root, text="Delete Task", command=lambda: [delete_task(task_to_delete), display_table_widgets(root, display_all_pending_tasks)])
     delete_button.grid(row=4, column=1)
+
+    reload_button = tk.Button(root, text="Reload Window", command=lambda: reload_window())
+    reload_button.grid(row=5, column=0, columnspan=2)
 
 def display_table_widgets(root, display_data_func):
     tree = ttk.Treeview(root, columns=("Description", "Priority"))
