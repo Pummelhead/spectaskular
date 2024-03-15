@@ -20,7 +20,7 @@ def create_task_widgets(root, add_task, delete_task):
     add_button = tk.Button(root, text="Add Task", command=lambda: add_task(task_entry, desc_entry, priority_var))
     add_button.grid(row=3, column=0, columnspan=2)
 
-    all_tasks = cur.execute("SELECT task FROM all_pending_tasks").fetchall()
+    all_tasks = [row[0] for row in cur.execute("SELECT task FROM all_pending_tasks").fetchall()]
     task_to_delete = tk.StringVar(root)
     task_to_delete.set("Select a task")
     delete_dropdown = tk.OptionMenu(root, task_to_delete, *all_tasks)

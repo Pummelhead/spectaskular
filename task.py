@@ -17,7 +17,7 @@ def add_task(task_entry, desc_entry, priority_var):
     conn.commit()
 
 def delete_task(task_to_delete):
-    task = task_to_delete.get().strip("'(),'")
+    task = task_to_delete.get()
     print(type(task))
     try:
         cur.execute(f"DELETE FROM all_pending_tasks WHERE task='{task}'")
