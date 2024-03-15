@@ -16,16 +16,13 @@ def add_task(task_entry, desc_entry, priority_var):
     desc_entry.delete(0, tk.END)
     conn.commit()
 
-def delete_task():
-    tasks = cur.execute("SELECT task FROM all_tasks").fetchall()
-    task_list = [row[0] for row in tasks]
-    delete_task_task = input(f"Task to delete {task_list}: ")
+def delete_task(task_to_delete):
+    task = task_to_delete.get()
     all_tables = cur.execute("SELECT name FROM sqlite_master WHERE type='table'").fetchall()
     for table in all_tables:    
         table_name = table[0]
-        print(table_name)
         try:
-            cur.execute(f"DELETE FROM {table_name} WHERE task='{delete_task_task}'")
+            cur.execute(f"DELETE FROM {table_name} WHERE task='{task}'")
         except sqlite3.Error as e:
             pass
     conn.commit()
