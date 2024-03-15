@@ -1,7 +1,6 @@
 import sqlite3
 import time
 import datetime
-import table
 import tkinter as tk
 from db import conn
 from db import cur
