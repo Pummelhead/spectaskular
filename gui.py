@@ -1,6 +1,24 @@
 import tkinter as tk
 from tkinter import ttk
 from db import cur
+from table import display_all_pending_tasks
+from task import add_task, delete_task
+from db import cur
+
+def create_window():
+    global root
+    root = tk.Tk()
+    root.geometry("1920x1080")
+    root.title("Spectaskular")
+
+    create_task_widgets(root, add_task, delete_task)
+    display_table_widgets(root, display_all_pending_tasks)
+
+    root.mainloop()
+
+def reload_window():
+    root.destroy()
+    create_window()
 
 def create_task_widgets(root, add_task, delete_task):
     tk.Label(root, text="Task: ").grid(row=0, column=0)
@@ -17,7 +35,7 @@ def create_task_widgets(root, add_task, delete_task):
     priority_dropdown = tk.OptionMenu(root, priority_var, "High", "Medium", "Low")
     priority_dropdown.grid(row=2, column=1)
 
-    add_button = tk.Button(root, text="Add Task", command=lambda: add_task(task_entry, desc_entry, priority_var))
+    add_button = tk.Button(root, text="Add Task", command=lambda: [add_task(task_entry, desc_entry, priority_var), reload_window()])
     add_button.grid(row=3, column=0, columnspan=2)
 
     all_tasks = [row[0] for row in cur.execute("SELECT task FROM all_pending_tasks").fetchall()]
@@ -26,7 +44,7 @@ def create_task_widgets(root, add_task, delete_task):
     delete_dropdown = tk.OptionMenu(root, task_to_delete, *all_tasks)
     delete_dropdown.grid(row=4, column=0)
     
-    delete_button = tk.Button(root, text="Delete Task", command=lambda: delete_task(task_to_delete))
+    delete_button = tk.Button(root, text="Delete Task", command=lambda: [delete_task(task_to_delete), reload_window()])
     delete_button.grid(row=4, column=1)
 
 def display_table_widgets(root, display_data_func):
