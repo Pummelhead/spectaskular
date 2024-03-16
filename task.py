@@ -10,20 +10,17 @@ def add_task(task_entry, desc_entry, priority_var):
     description = desc_entry.get()
     priority = priority_var.get()
     cur.execute(f"INSERT INTO all_pending_tasks (task, description, priority) VALUES (?, ?, ?)", (task, description, priority))
-    print("task added")
     task_entry.delete(0, tk.END)
     desc_entry.delete(0, tk.END)
     conn.commit()
 
-def delete_task(task_to_delete):
-    task = task_to_delete.get()
-    print(type(task))
+def delete_task(tree):
+    selected = tree.selection()
+    task = tree.item(selected)['values'][0]
     try:
         cur.execute(f"DELETE FROM all_pending_tasks WHERE task='{task}'")
     except sqlite3.Error as e:
         print(e)
-    print(task)
-    print("Delete button pressed")
     conn.commit()
 
 def complete_task():
