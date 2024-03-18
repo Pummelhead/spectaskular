@@ -1,9 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
-from db import cur
 from table import display_all_pending_tasks
-from task import add_task, delete_task
-from db import cur
+from task import add_task, delete_task, edit_entry
 
 window_geometry=None
 tree=None
@@ -17,8 +15,8 @@ def create_window(geometry=None):
         root.geometry("1920x1080")
     root.title("Spectaskular")
 
-    create_task_widgets(root, add_task, delete_task)
-    display_table_widgets(root, display_all_pending_tasks)
+    create_task_widgets(root)
+    display_table_widgets(root)
 
     root.mainloop()
 
@@ -32,7 +30,7 @@ def reload_window():
     root.destroy()
     create_window(window_geometry)
 
-def create_task_widgets(root, add_task, delete_task):
+def create_task_widgets(root, treeview=None):
     global tree
     tk.Label(root, text="Task: ").grid(row=0, column=0)
     task_entry = tk.Entry(root)
@@ -48,17 +46,19 @@ def create_task_widgets(root, add_task, delete_task):
     priority_dropdown = tk.OptionMenu(root, priority_var, "5", "4", "3", "2", "1")
     priority_dropdown.grid(row=2, column=1, sticky="w")
 
-    add_button = tk.Button(root, text="Add Task", command=lambda: [add_task(task_entry, desc_entry, priority_var), display_table_widgets(root, display_all_pending_tasks)])
-    add_button.grid(row=3, column=0, columnspan=2)
+    add_button = tk.Button(root, text="Add Task", command=lambda: [add_task(task_entry, desc_entry, priority_var), display_table_widgets(root)])
+    add_button.grid(row=3, column=0)
+    edit_button = ttk.Button(root, text="Edit Task", command=lambda: [edit_entry(task_entry, desc_entry, priority_var, tree), display_table_widgets(root)])
+    edit_button.grid(row=3, column=1)
 
     tk.Label(root, text="Select a task: ").grid(row=4, column=0)
-    delete_button = tk.Button(root, text="Delete Task", command=lambda: [delete_task(tree), display_table_widgets(root, display_all_pending_tasks)])
+    delete_button = tk.Button(root, text="Delete Task", command=lambda: [delete_task(tree), display_table_widgets(root)])
     delete_button.grid(row=4, column=1)
 
     reload_button = tk.Button(root, text="Reload Window", command=lambda: reload_window())
     reload_button.grid(row=5, column=0, columnspan=2)
 
-def display_table_widgets(root, display_data_func):
+def display_table_widgets(root):
     global tree
     tree = ttk.Treeview(root, columns=("Task", "Description", "Priority"))
     tree.heading("#0", text="")
@@ -68,7 +68,7 @@ def display_table_widgets(root, display_data_func):
     tree.heading("Priority", text="Priority", command=lambda: sort_column(tree, "Priority", False))
     tree["displaycolumns"] = ("Task", "Description", "Priority")
     tree.grid(row=0, rowspan=1000, column=2, columnspan=2, sticky="nsew")
-    display_data_func(tree)
+    display_all_pending_tasks(tree)
 
 def sort_column(tree, col, reverse=False):
     """Sort tree contents when a column header is clicked."""
@@ -77,3 +77,5 @@ def sort_column(tree, col, reverse=False):
     for index, (val, child) in enumerate(data):
         tree.move(child, '', index)
     tree.heading(col, command=lambda: sort_column(tree, col, not reverse))
+
+

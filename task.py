@@ -9,7 +9,10 @@ def add_task(task_entry, desc_entry, priority_var):
     task = task_entry.get()
     description = desc_entry.get()
     priority = priority_var.get()
-    cur.execute(f"INSERT INTO all_pending_tasks (task, description, priority) VALUES (?, ?, ?)", (task, description, priority))
+    try:
+        cur.execute(f"INSERT INTO all_pending_tasks (task, description, priority) VALUES (?, ?, ?)", (task, description, priority))
+    except sqlite3.Error as e:
+        pass
     task_entry.delete(0, tk.END)
     desc_entry.delete(0, tk.END)
     conn.commit()
@@ -39,28 +42,25 @@ def complete_task():
     cur.execute(f"INSERT INTO all_completed_tasks (task, description) VALUES (?, ?)", (task_move[0], task_move[1]))
     conn.commit()
 
-def edit_task():
-    tasks = cur.execute("SELECT task FROM all_pending_tasks").fetchall()
-    task_list = [row[0] for row in tasks]
-    edit_task_task = input(f"Task to edit {task_list}: ")
-    cur.execute("SELECT name FROM sqlite_master WHERE type='table';")
-    tables = cur.fetchall()
-    edit_task_name = input("Would you like to edit the name of this task? (y/n): ")
-    if edit_task_name == "y":
-        new_task = input(f"Task: ")
-        for table in tables:
-            table_name = table[0]
-            try:
-                cur.execute(f"UPDATE '{table_name}' SET task = '{new_task}' WHERE task = '{edit_task_task}'")
-            except sqlite3.Error as e:
-                pass
-    edit_task_description = input("Would you like to edit the description of this task? (y/n): ")
-    if edit_task_description == "y":
-        new_description = input(f"Description: ")
-        for table in tables:
-            table_name = table[0]
-            try:
-                cur.execute(f"UPDATE '{table_name}' SET description = '{new_description}' WHERE description = '{edit_task_description}'")
-            except sqlite3.Error as e:
-                pass
+def edit_entry(task_entry, desc_entry, priority_var, tree):
+    selected = tree.selection()
+    if selected:
+        existing_task = tree.item(selected)['values'][0]
+        existing_description = tree.item(selected)['values'][1]
+        existing_priority = tree.item(selected)['values'][2]
+        new_task = task_entry.get()
+        new_description = desc_entry.get()
+        new_priority = priority_var.get()
+        try:
+            cur.execute(f"UPDATE 'all_pending_tasks' SET task = '{new_task}' WHERE task = '{existing_task}'")
+        except sqlite3.Error as e:
+            pass
+        try:
+            cur.execute(f"UPDATE 'all_pending_tasks' SET description = '{new_description}' WHERE task = '{new_task}'")
+        except sqlite3.Error as e:
+            pass
+        try:
+            cur.execute(f"UPDATE 'all_pending_tasks' SET priority = '{new_priority}' WHERE task = '{new_task}'")
+        except sqlite3.Error as e:
+            pass
     conn.commit()
