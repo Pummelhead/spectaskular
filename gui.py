@@ -1,10 +1,11 @@
 import tkinter as tk
 from tkinter import ttk
-from table import display_all_pending_tasks
+from table import display_all_pending_tasks, display_all_completed_tasks
 from task import add_task, delete_task, edit_entry
 
 window_geometry=None
 tree=None
+table_var = None
 
 def create_window(geometry=None):
     global root
@@ -14,6 +15,7 @@ def create_window(geometry=None):
     root.title("Spectaskular")
 
     create_task_widgets(root)
+    create_table_display_widgets(root)
     display_table_widgets(root)
 
     root.mainloop()
@@ -56,8 +58,20 @@ def create_task_widgets(root, treeview=None):
     reload_button = tk.Button(root, text="Reload Window", command=lambda: reload_window())
     reload_button.grid(row=5, column=0, columnspan=2)
 
+def create_table_display_widgets(root):
+    global table_var
+    table_var = tk.IntVar(value=1)
+    tk.Radiobutton(root, text="Pending", variable=table_var, value=1, command=lambda: display_table_widgets(root)).grid(row=0, column=2)
+    root.columnconfigure(2, minsize=200)
+    tk.Radiobutton(root, text="Complete", variable=table_var, value=2, command=lambda: display_table_widgets(root)).grid(row=0, column=3)
+    root.columnconfigure(3, minsize=200)
+    tk.Radiobutton(root, text="All", variable=table_var, value=3, command=lambda: display_table_widgets(root)).grid(row=0, column=4)
+    root.columnconfigure(4, minsize=200)
+    
+
 def display_table_widgets(root):
     global tree
+    global table_var
     tree = ttk.Treeview(root, columns=("Task", "Description", "Priority"))
     tree.heading("#0", text="")
     tree.column("#0", width=0, stretch=tk.NO)
@@ -65,8 +79,14 @@ def display_table_widgets(root):
     tree.heading("Description", text="Description", command=lambda: sort_column(tree, "Description", False))
     tree.heading("Priority", text="Priority", command=lambda: sort_column(tree, "Priority", False))
     tree["displaycolumns"] = ("Task", "Description", "Priority")
-    tree.grid(row=0, rowspan=1000, column=2, columnspan=2, sticky="nsew")
-    display_all_pending_tasks(tree)
+    tree.grid(row=1, rowspan=1000, column=2, columnspan=3, sticky="nsew")
+    table_selection = table_var.get()
+    if table_selection == 1:
+        display_all_pending_tasks(tree)
+    elif table_selection == 2:
+        display_all_completed_tasks(tree)
+    else:
+        display_all_pending_tasks(tree)
 
 def sort_column(tree, col, reverse=False):
     """Sort tree contents when a column header is clicked."""
