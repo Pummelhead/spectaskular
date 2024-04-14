@@ -22,6 +22,7 @@ def delete_task(tree):
     task = tree.item(selected)['values'][0]
     try:
         cur.execute(f"DELETE FROM all_pending_tasks WHERE task='{task}'")
+        cur.execute(f"DELETE FROM all_completed_tasks WHERE task='{task}'")
     except sqlite3.Error as e:
         print(e)
     conn.commit()

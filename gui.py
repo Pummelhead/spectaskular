@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
-from table import display_all_pending_tasks, display_all_completed_tasks
+from table import display_all_pending_tasks, display_all_completed_tasks, display_all_tasks
 from task import add_task, delete_task, edit_entry
 
 window_geometry=None
@@ -85,8 +85,8 @@ def display_table_widgets(root):
         display_all_pending_tasks(tree)
     elif table_selection == 2:
         display_all_completed_tasks(tree)
-    else:
-        display_all_pending_tasks(tree)
+    elif table_selection == 3:
+        display_all_tasks(tree)
 
 def sort_column(tree, col, reverse=False):
     """Sort tree contents when a column header is clicked."""

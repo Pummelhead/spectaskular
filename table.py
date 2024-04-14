@@ -46,3 +46,12 @@ def display_all_completed_tasks(tree):
     for row in rows:
         tree.insert("", tk.END, values=(row[0], row[1], row[2]))
     conn.commit()
+
+def display_all_tasks(tree):
+    rows = cur.execute("SELECT * FROM all_pending_tasks").fetchall()
+    for row in rows:
+        tree.insert("", tk.END, values=(row[0], row[1], row[2]))
+    rows = cur.execute("SELECT * FROM all_completed_tasks").fetchall()
+    for row in rows:
+        tree.insert("", tk.END, values=(row[0], row[1], row[2]))
+    conn.commit()
