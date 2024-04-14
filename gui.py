@@ -11,8 +11,6 @@ def create_window(geometry=None):
     root = tk.Tk()
     if geometry:
         root.geometry(geometry)
-    else:
-        root.geometry("1920x1080")
     root.title("Spectaskular")
 
     create_task_widgets(root)
