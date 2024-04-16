@@ -31,9 +31,9 @@ cur.execute('''CREATE TABLE IF NOT EXISTS all_completed_tasks
             )''')
 apt_count = cur.execute("SELECT COUNT(*) FROM all_pending_tasks").fetchone()[0]
 if apt_count == 0:
-    cur.execute(f"INSERT OR IGNORE INTO all_pending_tasks (task, description, priority) VALUES (?, ?, ?)", ("Task Example", "Description Example", "High"))
+    cur.execute(f"INSERT OR IGNORE INTO all_pending_tasks (task, description, priority) VALUES (?, ?, ?)", ("Task Example", "Description Example", "5"))
 act_count = cur.execute("SELECT COUNT(*) FROM all_completed_tasks").fetchone()[0]
 if act_count == 0:
-    cur.execute(f"INSERT OR IGNORE INTO all_completed_tasks (task, description, priority) VALUES (?, ?, ?)", ("Task Example (Completed)", "Description Example", "High"))
+    cur.execute(f"INSERT OR IGNORE INTO all_completed_tasks (task, description, priority) VALUES (?, ?, ?)", ("Task Example (Completed)", "Description Example", "5"))
 cur.execute('''CREATE TABLE IF NOT EXISTS all_created_tables (name TEXT)''')
 conn.commit()
