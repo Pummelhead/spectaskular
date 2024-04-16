@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from table import display_all_pending_tasks, display_all_completed_tasks, display_all_tasks
-from task import add_task, delete_task, edit_entry
+from task import add_task, delete_task, edit_entry, complete_task, uncomplete_task
 
 window_geometry=None
 tree=None
@@ -51,12 +51,18 @@ def create_task_widgets(root, treeview=None):
     edit_button = ttk.Button(root, text="Edit Task", command=lambda: [edit_entry(task_entry, desc_entry, priority_var, tree), display_table_widgets(root)])
     edit_button.grid(row=3, column=1)
 
-    tk.Label(root, text="Select a task: ").grid(row=4, column=0)
+    complete_button = tk.Button(root, text="Complete Task", command=lambda: [complete_task(tree), display_table_widgets(root)])
+    complete_button.grid(row=4, column=0)
+
+    complete_button = tk.Button(root, text="Uncomplete Task", command=lambda: [uncomplete_task(tree), display_table_widgets(root)])
+    complete_button.grid(row=4, column=1)
+
+    tk.Label(root, text="Select a task: ").grid(row=5, column=0)
     delete_button = tk.Button(root, text="Delete Task", command=lambda: [delete_task(tree), display_table_widgets(root)])
-    delete_button.grid(row=4, column=1)
+    delete_button.grid(row=5, column=1)
 
     reload_button = tk.Button(root, text="Reload Window", command=lambda: reload_window())
-    reload_button.grid(row=5, column=0, columnspan=2)
+    reload_button.grid(row=6, column=0, columnspan=2)
 
 def create_table_display_widgets(root):
     global table_var
