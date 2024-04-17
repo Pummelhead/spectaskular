@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+from tktimepicker import SpinTimePickerOld, constants
 from table import display_all_pending_tasks, display_all_completed_tasks, display_all_tasks
 from task import add_task, delete_task, edit_entry, complete_task, uncomplete_task
 
@@ -32,6 +33,13 @@ def reload_window():
 
 def create_task_widgets(root, treeview=None):
     global tree
+
+    def toggle_radio(var):
+        if var.get() == True:
+            var.set(False)
+        else:
+            var.set(True)
+
     tk.Label(root, text="Task: ").grid(row=0, column=0)
     task_entry = tk.Entry(root)
     task_entry.grid(row=0, column=1)
@@ -44,25 +52,53 @@ def create_task_widgets(root, treeview=None):
     priority_var = tk.StringVar(root)
     priority_var.set("5")
     priority_dropdown = tk.OptionMenu(root, priority_var, "5", "4", "3", "2", "1")
-    priority_dropdown.grid(row=2, column=1, sticky="w")
+    priority_dropdown.grid(row=2, column=1)
+    
+    display_var = tk.BooleanVar()
+    tk.Checkbutton(root, text="Set Display Date/Time?", variable=display_var, command=toggle_radio(display_var)).grid(row=3, column=0, columnspan=2)
+    
+    tk.Label(root, text="Display Date:").grid(row=4, column=0)
+    dispay_date_entry = tk.Entry(root)
+    dispay_date_entry.insert(0, "MM/DD/YY")
+    dispay_date_entry.grid(row=4, column=1)
+    
+    tk.Label(root, text="Display Time (24HR):").grid(row=5, column=0)
+    display_time_picker = SpinTimePickerOld(root)
+    display_time_picker.addAll(constants.HOURS24)
+    display_time_picker.configureAll(width=5)
+    display_time_picker.grid(row=5, column=1)
+
+    due_var = tk.BooleanVar()
+    tk.Checkbutton(root, text="Set Due Date/Time?", variable=due_var, command=toggle_radio(due_var)).grid(row=6, column=0, columnspan=2)
+    
+    tk.Label(root, text="Due Date:").grid(row=7, column=0)
+    due_date_entry = tk.Entry(root)
+    due_date_entry.insert(0, "MM/DD/YY")
+    due_date_entry.grid(row=7, column=1)
+    
+    tk.Label(root, text="Due Time (24HR):").grid(row=8, column=0)
+    due_time_picker = SpinTimePickerOld(root)
+    due_time_picker.addAll(constants.HOURS24)
+    due_time_picker.configureAll(width=5)
+    due_time_picker.grid(row=8, column=1)
 
     add_button = tk.Button(root, text="Add Task", command=lambda: [add_task(task_entry, desc_entry, priority_var), display_table_widgets(root)])
-    add_button.grid(row=3, column=0)
+    add_button.grid(row=9, column=0)
     edit_button = ttk.Button(root, text="Edit Task", command=lambda: [edit_entry(task_entry, desc_entry, priority_var, tree), display_table_widgets(root)])
-    edit_button.grid(row=3, column=1)
+    edit_button.grid(row=9, column=1)
 
     complete_button = tk.Button(root, text="Complete Task", command=lambda: [complete_task(tree), display_table_widgets(root)])
-    complete_button.grid(row=4, column=0)
+    complete_button.grid(row=10, column=0)
 
-    complete_button = tk.Button(root, text="Uncomplete Task", command=lambda: [uncomplete_task(tree), display_table_widgets(root)])
-    complete_button.grid(row=4, column=1)
+    uncomplete_button = tk.Button(root, text="Uncomplete Task", command=lambda: [uncomplete_task(tree), display_table_widgets(root)])
+    uncomplete_button.grid(row=10, column=1)
 
-    tk.Label(root, text="Select a task: ").grid(row=5, column=0)
+    tk.Label(root, text="Select a task: ").grid(row=11, column=0)
     delete_button = tk.Button(root, text="Delete Task", command=lambda: [delete_task(tree), display_table_widgets(root)])
-    delete_button.grid(row=5, column=1)
+    delete_button.grid(row=11, column=1)
 
     reload_button = tk.Button(root, text="Reload Window", command=lambda: reload_window())
-    reload_button.grid(row=6, column=0, columnspan=2)
+    reload_button.grid(row=12, column=0, columnspan=2)
 
 def create_table_display_widgets(root):
     global table_var
@@ -78,13 +114,16 @@ def create_table_display_widgets(root):
 def display_table_widgets(root):
     global tree
     global table_var
-    tree = ttk.Treeview(root, columns=("Task", "Description", "Priority"))
+    tree = ttk.Treeview(root, columns=("Task", "Description", "Priority", "Due Time", "Every", "Unit"))
     tree.heading("#0", text="")
     tree.column("#0", width=0, stretch=tk.NO)
     tree.heading("Task", text="Task", command=lambda: sort_column(tree, "Task", False))
     tree.heading("Description", text="Description", command=lambda: sort_column(tree, "Description", False))
     tree.heading("Priority", text="Priority", command=lambda: sort_column(tree, "Priority", False))
-    tree["displaycolumns"] = ("Task", "Description", "Priority")
+    tree.heading("Due Time", text="Due Time", command=lambda: sort_column(tree, "Due Time", False))
+    tree.heading("Every", text="Every", command=lambda: sort_column(tree, "Every", False))
+    tree.heading("Unit", text="Unit", command=lambda: sort_column(tree, "Unit", False))
+    tree["displaycolumns"] = ("Task", "Description", "Priority", "Due Time", "Every", "Unit")
     tree.grid(row=1, rowspan=1000, column=2, columnspan=3, sticky="nsew")
     table_selection = table_var.get()
     if table_selection == 1:
