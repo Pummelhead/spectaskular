@@ -3,6 +3,7 @@ from tkinter import ttk
 from tktimepicker import SpinTimePickerOld, constants
 from table import display_all_pending_tasks, display_all_completed_tasks, display_all_tasks
 from task import add_task, delete_task, edit_entry, complete_task, uncomplete_task
+from functools import partial
 
 window_geometry=None
 tree=None
@@ -34,11 +35,19 @@ def reload_window():
 def create_task_widgets(root, treeview=None):
     global tree
 
-    def toggle_radio(var):
-        if var.get() == True:
-            var.set(False)
-        else:
-            var.set(True)
+    #def display_toggle_radio():
+    #    if display_var.get:
+    #        display_var.set(False)
+    #    else:
+    #        display_var.set(True)
+    #    print(f"display: {display_var.get()}")
+#
+    #def due_toggle_radio():
+    #    if due_var.get:
+    #        due_var.set(False)
+    #    else:
+    #        due_var.set(True)
+    #    print(f"due: {due_var.get()}")
 
     tk.Label(root, text="Task: ").grid(row=0, column=0)
     task_entry = tk.Entry(root)
@@ -55,12 +64,14 @@ def create_task_widgets(root, treeview=None):
     priority_dropdown.grid(row=2, column=1)
     
     display_var = tk.BooleanVar()
-    tk.Checkbutton(root, text="Set Display Date/Time?", variable=display_var, command=toggle_radio(display_var)).grid(row=3, column=0, columnspan=2)
+    display_var.set(False)
+    print(f"display is: {display_var.get()}")
+    tk.Checkbutton(root, text="Set Display Date/Time?", variable=display_var).grid(row=3, column=0, columnspan=2)
     
     tk.Label(root, text="Display Date:").grid(row=4, column=0)
-    dispay_date_entry = tk.Entry(root)
-    dispay_date_entry.insert(0, "MM/DD/YY")
-    dispay_date_entry.grid(row=4, column=1)
+    display_date_entry = tk.Entry(root)
+    display_date_entry.insert(0, "MM/DD/YY")
+    display_date_entry.grid(row=4, column=1)
     
     tk.Label(root, text="Display Time (24HR):").grid(row=5, column=0)
     display_time_picker = SpinTimePickerOld(root)
@@ -69,7 +80,9 @@ def create_task_widgets(root, treeview=None):
     display_time_picker.grid(row=5, column=1)
 
     due_var = tk.BooleanVar()
-    tk.Checkbutton(root, text="Set Due Date/Time?", variable=due_var, command=toggle_radio(due_var)).grid(row=6, column=0, columnspan=2)
+    due_var.set(False)
+    print(f"due is: {due_var.get()}")
+    tk.Checkbutton(root, text="Set Due Date/Time?", variable=due_var).grid(row=6, column=0, columnspan=2)
     
     tk.Label(root, text="Due Date:").grid(row=7, column=0)
     due_date_entry = tk.Entry(root)
@@ -82,9 +95,21 @@ def create_task_widgets(root, treeview=None):
     due_time_picker.configureAll(width=5)
     due_time_picker.grid(row=8, column=1)
 
-    add_button = tk.Button(root, text="Add Task", command=lambda: [add_task(task_entry, desc_entry, priority_var), display_table_widgets(root)])
+    add_button = tk.Button(root, text="Add Task",
+                command=lambda: [add_task(task_entry,
+                                          desc_entry,
+                                          priority_var,
+                                          display_var,
+                                          display_date_entry,
+                                          display_time_picker,
+                                          due_var,
+                                          due_date_entry,
+                                          due_time_picker),
+                                          display_table_widgets(root)])
     add_button.grid(row=9, column=0)
-    edit_button = ttk.Button(root, text="Edit Task", command=lambda: [edit_entry(task_entry, desc_entry, priority_var, tree), display_table_widgets(root)])
+    edit_button = ttk.Button(root, text="Edit Task", 
+                command=lambda: [edit_entry(task_entry, desc_entry, priority_var, tree),
+                display_table_widgets(root)])
     edit_button.grid(row=9, column=1)
 
     complete_button = tk.Button(root, text="Complete Task", command=lambda: [complete_task(tree), display_table_widgets(root)])
