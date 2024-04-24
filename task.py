@@ -24,12 +24,12 @@ def add_task(task_entry,
         pass
     if display_var.get():
         try:
-            cur.execute("UPDATE all_pending_tasks SET display_time = ? WHERE task = ?", (f"{display_date_entry.get()} - {display_time_picker.time()}", task_entry.get()))
+            cur.execute("UPDATE all_pending_tasks SET display_time = ? WHERE task = ?", (f"{display_date_entry.get()} - {display_time_picker.hours():02d}", task_entry.get()))
         except sqlite3.Error as e:
             print(e)
     if due_var.get():
         try:
-            cur.execute("UPDATE all_pending_tasks SET due_time = ? WHERE task = ?", (f"{due_date_entry.get()} - {due_time_picker.time()}", task_entry.get()))
+            cur.execute("UPDATE all_pending_tasks SET due_time = ? WHERE task = ?", (f"{due_date_entry.get()} - {due_time_picker.hours():02d}:{due_time_picker.minutes():02d}", task_entry.get()))
         except sqlite3.Error as e:
             print(e)
     task_entry.delete(0, tk.END)

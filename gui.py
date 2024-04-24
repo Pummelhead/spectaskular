@@ -35,20 +35,6 @@ def reload_window():
 def create_task_widgets(root, treeview=None):
     global tree
 
-    #def display_toggle_radio():
-    #    if display_var.get:
-    #        display_var.set(False)
-    #    else:
-    #        display_var.set(True)
-    #    print(f"display: {display_var.get()}")
-#
-    #def due_toggle_radio():
-    #    if due_var.get:
-    #        due_var.set(False)
-    #    else:
-    #        due_var.set(True)
-    #    print(f"due: {due_var.get()}")
-
     tk.Label(root, text="Task: ").grid(row=0, column=0)
     task_entry = tk.Entry(root)
     task_entry.grid(row=0, column=1)
@@ -65,7 +51,6 @@ def create_task_widgets(root, treeview=None):
     
     display_var = tk.BooleanVar()
     display_var.set(False)
-    print(f"display is: {display_var.get()}")
     tk.Checkbutton(root, text="Set Display Date/Time?", variable=display_var).grid(row=3, column=0, columnspan=2)
     
     tk.Label(root, text="Display Date:").grid(row=4, column=0)
@@ -76,12 +61,11 @@ def create_task_widgets(root, treeview=None):
     tk.Label(root, text="Display Time (24HR):").grid(row=5, column=0)
     display_time_picker = SpinTimePickerOld(root)
     display_time_picker.addAll(constants.HOURS24)
-    display_time_picker.configureAll(width=5)
+    display_time_picker.configureAll(width=5, format='%02.0f')
     display_time_picker.grid(row=5, column=1)
 
     due_var = tk.BooleanVar()
     due_var.set(False)
-    print(f"due is: {due_var.get()}")
     tk.Checkbutton(root, text="Set Due Date/Time?", variable=due_var).grid(row=6, column=0, columnspan=2)
     
     tk.Label(root, text="Due Date:").grid(row=7, column=0)
@@ -92,7 +76,7 @@ def create_task_widgets(root, treeview=None):
     tk.Label(root, text="Due Time (24HR):").grid(row=8, column=0)
     due_time_picker = SpinTimePickerOld(root)
     due_time_picker.addAll(constants.HOURS24)
-    due_time_picker.configureAll(width=5)
+    due_time_picker.configureAll(width=5, format='%02.0f')
     due_time_picker.grid(row=8, column=1)
 
     add_button = tk.Button(root, text="Add Task",
