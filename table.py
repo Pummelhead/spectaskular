@@ -37,21 +37,38 @@ def edit_table():
 
 def display_all_pending_tasks(tree):
     rows = cur.execute("SELECT * FROM all_pending_tasks").fetchall()
+    cur_row = 1
+    tree.tag_configure("odd")
+    tree.tag_configure("even", background="#f0f0f0")
     for row in rows:
-        tree.insert("", tk.END, values=(row[0], row[1], row[2], row[4], row[6], row[7]))
+        tag = "even" if cur_row % 2 == 0 else "odd"
+        tree.insert("", tk.END, values=(row[0], row[1], row[2], row[4], row[6], row[7]), tags=(tag))
+        cur_row += 1
     conn.commit()
 
 def display_all_completed_tasks(tree):
     rows = cur.execute("SELECT * FROM all_completed_tasks").fetchall()
+    cur_row = 1
+    tree.tag_configure("odd")
+    tree.tag_configure("even", background="#f0f0f0")
     for row in rows:
-        tree.insert("", tk.END, values=(row[0], row[1], row[2], row[4], row[6], row[7]))
+        tag = "even" if cur_row % 2 == 0 else "odd"
+        tree.insert("", tk.END, values=(row[0], row[1], row[2], row[4], row[6], row[7]), tags=(tag))
+        cur_row += 1
     conn.commit()
 
 def display_all_tasks(tree):
     rows = cur.execute("SELECT * FROM all_pending_tasks").fetchall()
+    cur_row = 1
+    tree.tag_configure("odd")
+    tree.tag_configure("even", background="#f0f0f0")
     for row in rows:
-        tree.insert("", tk.END, values=(row[0], row[1], row[2], row[4], row[6], row[7]))
+        tag = "even" if cur_row % 2 == 0 else "odd"
+        tree.insert("", tk.END, values=(row[0], row[1], row[2], row[4], row[6], row[7]), tags=(tag))
+        cur_row += 1
     rows = cur.execute("SELECT * FROM all_completed_tasks").fetchall()
     for row in rows:
-        tree.insert("", tk.END, values=(row[0], row[1], row[2], row[4], row[6], row[7]))
+        tag = "even" if cur_row % 2 == 0 else "odd"
+        tree.insert("", tk.END, values=(row[0], row[1], row[2], row[4], row[6], row[7]), tags=(tag))
+        cur_row += 1
     conn.commit()
