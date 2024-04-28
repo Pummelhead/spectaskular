@@ -1,10 +1,9 @@
 # spectaskular
 Task management program that allows the set of display date, due date/time, and priority.
 
-The newer versions of python should come  
-with SQLite3 and Tkinter
+The newer versions of python should come with SQLite3 and Tkinter
 
-The program does utilize tktimepicker
+The program does utilize tktimepicker  
 pip install tkTimePicker
 
 Pending tasks only display tasks in which
