@@ -1,4 +1,5 @@
 import sqlite3
+from datetime import datetime
 
 
 
@@ -7,24 +8,36 @@ cur = conn.cursor()
 
 
 
-cur.execute('''CREATE TABLE IF NOT EXISTS all_pending_tasks 
+cur.execute(f'''CREATE TABLE IF NOT EXISTS all_pending_tasks 
             (
             task TEXT PRIMARY KEY,
             description TEXT,
             priority INTEGER,
+            display_month INTEGER DEFAULT {datetime.now().month},
+            display_day INTEGER DEFAULT {datetime.now().day},
+            display_year INTEGER DEFAULT {int(datetime.now().strftime("%y"))},
             display_time TEXT,
-            due_time TEXT,
+            due_month INTEGER DEFAULT 0,
+            due_day INTEGER DEFAULT 0,
+            due_year INTEGER DEFAULT 0,
+            due_time TEXT DEFAULT "-:-",
             completed BOOLEAN DEFAULT false,
             frequency_step INTEGER,
             frequency_step_type TEXT
             )''')
-cur.execute('''CREATE TABLE IF NOT EXISTS all_completed_tasks 
+cur.execute(f'''CREATE TABLE IF NOT EXISTS all_completed_tasks 
             (
             task TEXT PRIMARY KEY,
             description TEXT,
             priority INTEGER,
+            display_month INTEGER DEFAULT {datetime.now().month},
+            display_day INTEGER DEFAULT {datetime.now().day},
+            display_year INTEGER DEFAULT {int(datetime.now().strftime("%y"))},
             display_time TEXT,
-            due_time TEXT,
+            due_month INTEGER DEFAULT 0 DEFAULT 0,
+            due_day INTEGER DEFAULT 0,
+            due_year INTEGER DEFAULT 0,
+            due_time TEXT DEFAULT "-:-",
             completed BOOLEAN,
             frequency_step INTEGER,
             frequency_step_type TEXT

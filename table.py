@@ -42,7 +42,7 @@ def display_all_pending_tasks(tree):
     tree.tag_configure("even", background="#f0f0f0")
     for row in rows:
         tag = "even" if cur_row % 2 == 0 else "odd"
-        tree.insert("", tk.END, values=(row[0], row[1], row[2], row[4], row[6], row[7]), tags=(tag))
+        tree.insert("", tk.END, values=(row[0], row[1], row[2], f"{row[7]:02d}/{row[8]:02d}/{row[9]:02d} - {row[10]}", row[12], row[13]), tags=(tag))
         cur_row += 1
     conn.commit()
 
@@ -53,7 +53,7 @@ def display_all_completed_tasks(tree):
     tree.tag_configure("even", background="#f0f0f0")
     for row in rows:
         tag = "even" if cur_row % 2 == 0 else "odd"
-        tree.insert("", tk.END, values=(row[0], row[1], row[2], row[4], row[6], row[7]), tags=(tag))
+        tree.insert("", tk.END, values=(row[0], row[1], row[2], f"{row[7]:02d}/{row[8]:02d}/{row[9]:02d} - {row[10]}", row[12], row[13]), tags=(tag))
         cur_row += 1
     conn.commit()
 
@@ -64,11 +64,11 @@ def display_all_tasks(tree):
     tree.tag_configure("even", background="#f0f0f0")
     for row in rows:
         tag = "even" if cur_row % 2 == 0 else "odd"
-        tree.insert("", tk.END, values=(row[0], row[1], row[2], row[4], row[6], row[7]), tags=(tag))
+        tree.insert("", tk.END, values=(row[0], row[1], row[2], f"{row[7]:02d}/{row[8]:02d}/{row[9]:02d} - {row[10]}", row[12], row[13]), tags=(tag))
         cur_row += 1
     rows = cur.execute("SELECT * FROM all_completed_tasks").fetchall()
     for row in rows:
         tag = "even" if cur_row % 2 == 0 else "odd"
-        tree.insert("", tk.END, values=(row[0], row[1], row[2], row[4], row[6], row[7]), tags=(tag))
+        tree.insert("", tk.END, values=(row[0], row[1], row[2], f"{row[7]:02d}/{row[8]:02d}/{row[9]:02d} - {row[10]}", row[12], row[13]), tags=(tag))
         cur_row += 1
     conn.commit()

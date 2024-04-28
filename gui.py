@@ -3,7 +3,6 @@ from tkinter import ttk
 from tktimepicker import SpinTimePickerOld, constants
 from table import display_all_pending_tasks, display_all_completed_tasks, display_all_tasks
 from task import add_task, delete_task, edit_entry, complete_task, uncomplete_task
-from functools import partial
 
 window_geometry=None
 tree=None
@@ -53,10 +52,13 @@ def create_task_widgets(root, treeview=None):
     display_var.set(False)
     tk.Checkbutton(root, text="Set Display Date/Time?", variable=display_var).grid(row=3, column=0, columnspan=2)
     
-    tk.Label(root, text="Display Date:").grid(row=4, column=0)
-    display_date_entry = tk.Entry(root)
-    display_date_entry.insert(0, "MM/DD/YY")
-    display_date_entry.grid(row=4, column=1)
+    tk.Label(root, text="Display Date (MM/DD/YY):").grid(row=4, column=0)
+    display_month_entry = tk.Spinbox(root, from_=1, to=12, width=4)
+    display_month_entry.grid(row=4, column=1, sticky="w")
+    display_day_entry = tk.Spinbox(root, from_=1, to=31, width=4)
+    display_day_entry.grid(row=4,column=1)
+    display_year_entry = tk.Spinbox(root, from_=0, to=99, width=4)
+    display_year_entry.grid(row=4, column=1, sticky="e")
     
     tk.Label(root, text="Display Time (24HR):").grid(row=5, column=0)
     display_time_picker = SpinTimePickerOld(root)
@@ -68,10 +70,13 @@ def create_task_widgets(root, treeview=None):
     due_var.set(False)
     tk.Checkbutton(root, text="Set Due Date/Time?", variable=due_var).grid(row=6, column=0, columnspan=2)
     
-    tk.Label(root, text="Due Date:").grid(row=7, column=0)
-    due_date_entry = tk.Entry(root)
-    due_date_entry.insert(0, "MM/DD/YY")
-    due_date_entry.grid(row=7, column=1)
+    tk.Label(root, text="Due Date (MM/DD/YY):").grid(row=7, column=0)
+    due_month_entry = tk.Spinbox(root, from_=1, to=12, width=4)
+    due_month_entry.grid(row=7, column=1, sticky="w")
+    due_day_entry = tk.Spinbox(root, from_=1, to=31, width=4)
+    due_day_entry.grid(row=7,column=1)
+    due_year_entry = tk.Spinbox(root, from_=0, to=99, width=4)
+    due_year_entry.grid(row=7, column=1, sticky="e")
     
     tk.Label(root, text="Due Time (24HR):").grid(row=8, column=0)
     due_time_picker = SpinTimePickerOld(root)
@@ -84,10 +89,14 @@ def create_task_widgets(root, treeview=None):
                                           desc_entry,
                                           priority_var,
                                           display_var,
-                                          display_date_entry,
+                                          display_month_entry,
+                                          display_day_entry,
+                                          display_year_entry,
                                           display_time_picker,
                                           due_var,
-                                          due_date_entry,
+                                          due_month_entry,
+                                          due_day_entry,
+                                          due_year_entry,
                                           due_time_picker),
                                           display_table_widgets(root)])
     add_button.grid(row=9, column=0)

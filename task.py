@@ -1,6 +1,4 @@
 import sqlite3
-import time
-import datetime
 import tkinter as tk
 from db import conn
 from db import cur
@@ -9,11 +7,15 @@ def add_task(task_entry,
              desc_entry,
              priority_var,
              display_var=False,
-             display_date_entry=None,
-             display_time_picker=None,
+             display_month_entry=0,
+             display_day_entry=0,
+             display_year_entry=0,
+             display_time_picker="",
              due_var=False,
-             due_date_entry=None,
-             due_time_picker=None):
+             due_month_entry=0,
+             due_day_entry=0,
+             due_year_entry=0,
+             due_time_picker="-"):
     try:
         cur.execute(f"INSERT INTO all_pending_tasks (task, description, priority) VALUES (?, ?, ?)",
                     (task_entry.get(),
@@ -24,12 +26,12 @@ def add_task(task_entry,
         pass
     if display_var.get():
         try:
-            cur.execute("UPDATE all_pending_tasks SET display_time = ? WHERE task = ?", (f"{display_date_entry.get()} - {display_time_picker.hours():02d}", task_entry.get()))
+            cur.execute("UPDATE all_pending_tasks SET display_month = ?, display_day = ?, display_year = ?, display_time = ? WHERE task = ?", (display_month_entry.get(), display_day_entry.get(), display_year_entry.get(), f"{display_time_picker.hours():02d}:{display_time_picker.minutes():02d}", task_entry.get()))
         except sqlite3.Error as e:
             print(e)
     if due_var.get():
         try:
-            cur.execute("UPDATE all_pending_tasks SET due_time = ? WHERE task = ?", (f"{due_date_entry.get()} - {due_time_picker.hours():02d}:{due_time_picker.minutes():02d}", task_entry.get()))
+            cur.execute("UPDATE all_pending_tasks SET due_month = ?, due_day = ?, due_year = ?, due_time =? WHERE task = ?", (due_month_entry.get(), due_day_entry.get(), due_year_entry.get(), f"{due_time_picker.hours():02d}:{display_time_picker.minutes():02d}", task_entry.get()))
         except sqlite3.Error as e:
             print(e)
     task_entry.delete(0, tk.END)
