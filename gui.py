@@ -84,6 +84,17 @@ def create_task_widgets(root, treeview=None):
     due_time_picker.configureAll(width=5, format='%02.0f')
     due_time_picker.grid(row=8, column=1)
 
+    repeat_var = tk.BooleanVar()
+    repeat_var.set(False)
+    tk.Checkbutton(root, text="Repeat?", variable=repeat_var).grid(row=9, column=0, columnspan=2)
+    tk.Label(root, text="Every:").grid(row=10, column=0)
+    frequency_step_entry = tk.Spinbox(root, width=5, from_=1, to=999)
+    frequency_step_entry.grid(row=10, column=1, sticky="w")
+    frequency_type_var = tk.StringVar(root)
+    frequency_type_var.set("Days")
+    frequency_type_entry = tk.OptionMenu(root, frequency_type_var, "Days", "Months", "Years")
+    frequency_type_entry.grid(row=10, column=1, sticky="e")
+
     add_button = tk.Button(root, text="Add Task",
                 command=lambda: [add_task(task_entry,
                                           desc_entry,
@@ -97,26 +108,30 @@ def create_task_widgets(root, treeview=None):
                                           due_month_entry,
                                           due_day_entry,
                                           due_year_entry,
-                                          due_time_picker),
-                                          display_table_widgets(root)])
-    add_button.grid(row=9, column=0)
+                                          due_time_picker,
+                                          repeat_var,
+                                          frequency_step_entry,
+                                          frequency_type_var),
+                                          display_table_widgets(root)])    
+    add_button.grid(row=11, column=0)
+
     edit_button = ttk.Button(root, text="Edit Task", 
                 command=lambda: [edit_entry(task_entry, desc_entry, priority_var, tree),
                 display_table_widgets(root)])
-    edit_button.grid(row=9, column=1)
+    edit_button.grid(row=11, column=1)
 
     complete_button = tk.Button(root, text="Complete Task", command=lambda: [complete_task(tree), display_table_widgets(root)])
-    complete_button.grid(row=10, column=0)
+    complete_button.grid(row=12, column=0)
 
     uncomplete_button = tk.Button(root, text="Uncomplete Task", command=lambda: [uncomplete_task(tree), display_table_widgets(root)])
-    uncomplete_button.grid(row=10, column=1)
+    uncomplete_button.grid(row=12, column=1)
 
-    tk.Label(root, text="Select a task: ").grid(row=11, column=0)
+    tk.Label(root, text="Select a task: ").grid(row=13, column=0)
     delete_button = tk.Button(root, text="Delete Task", command=lambda: [delete_task(tree), display_table_widgets(root)])
-    delete_button.grid(row=11, column=1)
+    delete_button.grid(row=13, column=1)
 
     reload_button = tk.Button(root, text="Reload Window", command=lambda: reload_window())
-    reload_button.grid(row=12, column=0, columnspan=2)
+    reload_button.grid(row=14, column=0, columnspan=2)
 
 def create_table_display_widgets(root):
     global table_var

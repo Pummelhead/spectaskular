@@ -15,7 +15,10 @@ def add_task(task_entry,
              due_month_entry=0,
              due_day_entry=0,
              due_year_entry=0,
-             due_time_picker="-"):
+             due_time_picker="-",
+             repeat_var=False,
+             frequency_step_entry=0,
+             frequency_type_var=""):
     try:
         cur.execute(f"INSERT INTO all_pending_tasks (task, description, priority) VALUES (?, ?, ?)",
                     (task_entry.get(),
@@ -32,6 +35,11 @@ def add_task(task_entry,
     if due_var.get():
         try:
             cur.execute("UPDATE all_pending_tasks SET due_month = ?, due_day = ?, due_year = ?, due_time =? WHERE task = ?", (due_month_entry.get(), due_day_entry.get(), due_year_entry.get(), f"{due_time_picker.hours():02d}:{display_time_picker.minutes():02d}", task_entry.get()))
+        except sqlite3.Error as e:
+            print(e)
+    if repeat_var.get():
+        try:
+            cur.execute("UPDATE all_pending_tasks SET frequency_step = ?, frequency_step_type = ? WHERE task = ?", (frequency_step_entry.get(), frequency_type_var.get(), task_entry.get()))
         except sqlite3.Error as e:
             print(e)
     task_entry.delete(0, tk.END)
