@@ -10,7 +10,6 @@ def add_task(task_entry,
              display_month_entry=0,
              display_day_entry=0,
              display_year_entry=0,
-             display_time_picker="",
              due_var=False,
              due_month_entry=0,
              due_day_entry=0,
@@ -29,12 +28,12 @@ def add_task(task_entry,
         pass
     if display_var.get():
         try:
-            cur.execute("UPDATE all_pending_tasks SET display_month = ?, display_day = ?, display_year = ?, display_time = ? WHERE task = ?", (display_month_entry.get(), display_day_entry.get(), display_year_entry.get(), f"{display_time_picker.hours():02d}:{display_time_picker.minutes():02d}", task_entry.get()))
+            cur.execute("UPDATE all_pending_tasks SET display_month = ?, display_day = ?, display_year = ? WHERE task = ?", (display_month_entry.get(), display_day_entry.get(), display_year_entry.get(), task_entry.get()))
         except sqlite3.Error as e:
             print(e)
     if due_var.get():
         try:
-            cur.execute("UPDATE all_pending_tasks SET due_month = ?, due_day = ?, due_year = ?, due_time =? WHERE task = ?", (due_month_entry.get(), due_day_entry.get(), due_year_entry.get(), f"{due_time_picker.hours():02d}:{display_time_picker.minutes():02d}", task_entry.get()))
+            cur.execute("UPDATE all_pending_tasks SET due_month = ?, due_day = ?, due_year = ?, due_time =? WHERE task = ?", (due_month_entry.get(), due_day_entry.get(), due_year_entry.get(), f"{due_time_picker.hours():02d}:{due_time_picker.minutes():02d}", task_entry.get()))
         except sqlite3.Error as e:
             print(e)
     if repeat_var.get():
@@ -59,12 +58,34 @@ def delete_task(tree):
 def complete_task(tree):
     selected = tree.selection()
     task = tree.item(selected)['values'][0]
-    try:
-        cur.execute(f"INSERT INTO all_completed_tasks SELECT * FROM all_pending_tasks WHERE task='{task}'")
-        cur.execute(f"UPDATE all_completed_tasks SET completed = 'true' WHERE task='{task}'")
-        cur.execute(f"DELETE FROM all_pending_tasks WHERE task='{task}'")
-    except sqlite3.Error as e:
-        pass
+    if tree.item(selected)['values'][4] == "None":
+        try:
+            cur.execute(f"INSERT INTO all_completed_tasks SELECT * FROM all_pending_tasks WHERE task='{task}'")
+            cur.execute(f"UPDATE all_completed_tasks SET completed = 'true' WHERE task='{task}'")
+            cur.execute(f"DELETE FROM all_pending_tasks WHERE task='{task}'")
+        except sqlite3.Error as e:
+            pass
+    elif tree.item(selected)['values'][5] == "Days":
+        try:
+            cur.execute(f"UPDATE all_pending_tasks SET display_day = display_day + frequency_step WHERE task='{task}'")
+            if "00/00/00" not in tree.item(selected)['values'][3]:
+                cur.execute(f"UPDATE all_pending_tasks SET due_day = due_day + frequency_step WHERE task='{task}'")
+        except sqlite3.Error as e:
+            print(e)
+    elif tree.item(selected)['values'][5] == "Months":
+        try:
+            cur.execute(f"UPDATE all_pending_tasks SET display_month = display_month + frequency_step WHERE task='{task}'")
+            if "00/00/00" not in tree.item(selected)['values'][3]:
+                cur.execute(f"UPDATE all_pending_tasks SET due_month = due_month + frequency_step WHERE task='{task}'")
+        except sqlite3.Error as e:
+            print(e)
+    elif tree.item(selected)['values'][5] == "Years":
+        try:
+            cur.execute(f"UPDATE all_pending_tasks SET display_year = display_year + frequency_step WHERE task='{task}'")
+            if "00/00/00" not in tree.item(selected)['values'][3]:
+                cur.execute(f"UPDATE all_pending_tasks SET due_year = due_year + frequency_step WHERE task='{task}'")
+        except sqlite3.Error as e:
+            print(e)
     conn.commit()
 
 def uncomplete_task(tree):

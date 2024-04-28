@@ -50,7 +50,7 @@ def create_task_widgets(root, treeview=None):
     
     display_var = tk.BooleanVar()
     display_var.set(False)
-    tk.Checkbutton(root, text="Set Display Date/Time?", variable=display_var).grid(row=3, column=0, columnspan=2)
+    tk.Checkbutton(root, text="Set Display Date?", variable=display_var).grid(row=3, column=0, columnspan=2)
     
     tk.Label(root, text="Display Date (MM/DD/YY):").grid(row=4, column=0)
     display_month_entry = tk.Spinbox(root, from_=1, to=12, width=4)
@@ -59,12 +59,6 @@ def create_task_widgets(root, treeview=None):
     display_day_entry.grid(row=4,column=1)
     display_year_entry = tk.Spinbox(root, from_=0, to=99, width=4)
     display_year_entry.grid(row=4, column=1, sticky="e")
-    
-    tk.Label(root, text="Display Time (24HR):").grid(row=5, column=0)
-    display_time_picker = SpinTimePickerOld(root)
-    display_time_picker.addAll(constants.HOURS24)
-    display_time_picker.configureAll(width=5, format='%02.0f')
-    display_time_picker.grid(row=5, column=1)
 
     due_var = tk.BooleanVar()
     due_var.set(False)
@@ -86,8 +80,8 @@ def create_task_widgets(root, treeview=None):
 
     repeat_var = tk.BooleanVar()
     repeat_var.set(False)
-    tk.Checkbutton(root, text="Repeat?", variable=repeat_var).grid(row=9, column=0, columnspan=2)
-    tk.Label(root, text="Every:").grid(row=10, column=0)
+    tk.Checkbutton(root, text="Repeat?", variable=repeat_var).grid(row=10, column=0, sticky="w")
+    tk.Label(root, text="Every:").grid(row=10, column=0, sticky="e")
     frequency_step_entry = tk.Spinbox(root, width=5, from_=1, to=999)
     frequency_step_entry.grid(row=10, column=1, sticky="w")
     frequency_type_var = tk.StringVar(root)
@@ -103,7 +97,6 @@ def create_task_widgets(root, treeview=None):
                                           display_month_entry,
                                           display_day_entry,
                                           display_year_entry,
-                                          display_time_picker,
                                           due_var,
                                           due_month_entry,
                                           due_day_entry,
