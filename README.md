@@ -12,3 +12,5 @@ Pending tasks only display tasks in which the display date is less than or equal
 If you add a task with a display date that is in the future it will not show up on Pending tasks, but will show up on All tasks.
 Likewise, if you have a task repeat, the display time gets updated when completing the task, which may cause a display time in the future thus dropping the task off of Pending until that date comes.
 The default display date is the current date.
+
+![screenshot](image.png)
