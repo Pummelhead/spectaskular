@@ -26,7 +26,7 @@ The default display date is the current date.
 If you want an executable for the application and not have it run on python you can use pyinstaller.  
 pip install pyinstaller  
 or  
-pip3 install pytinstaller
+pip3 install pytinstaller  
 Then while your terminal is in the directory of the appliation run  
 pyinstaller --onefile main.py  
 once that is complete move the .exe file from the disc directory into the main directory.
